@@ -29,7 +29,7 @@ app.get('/jobs/:id', (req, res) => {
 })
 
 const transporter = nodemailer.createTransport({
-    host: 'amudegi@gmail.com', //SMPT host
+    host: 'mail.gmx.com',//SMPT host
     port: 3000, //SMPT port
     secure: true,
     auth: {
