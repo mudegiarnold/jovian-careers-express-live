@@ -28,9 +28,10 @@ app.get('/jobs/:id', (req, res) => {
     res.render('job', { job: matchedJob});
 })
 
+
 const transporter = nodemailer.createTransport({
-    host: 'mail.gmx.com',//SMPT host
-    port: 3000, //SMPT port
+    host: 'smtp.gmail.com',
+    port: 465,
     secure: true,
     auth: {
       user: process.env.EMAIL_ID,
@@ -39,26 +40,24 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/jobs/:id/apply', (req, res) => {
-    const { name, email, phone, dob, coverletter } = req.body;
+    console.log('req.body', req.body);
+    const { name, email, phone, dob, position, coverletter } = req.body;
 
     const id = req.params.id;
     const matchedJob = JOBS.find(job => job.id.toString() === id);
-  
-    console.log('req.body', req.body);
-    console.log('matchedJob', matchedJob)
 
     const mailOptions = {
-        from: process.env.EMAIL_ID,
-        to: process.env.EMAIL_ID,
-        subject: `New Application for ${matchedJob.title}`,
-        html: `
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
-          <p><strong>Date of Birth:</strong> ${dob}</p>
-          <p><strong>Cover Letter:</strong> ${coverletter}</p>
-        `
-      };
+      from: process.env.EMAIL_ID,
+      to: process.env.EMAIL_ID,
+      subject: `New Application for ${matchedJob.title}`,
+      html: `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Date of Birth:</strong> ${dob}</p>
+        <p><strong>Cover Letter:</strong> ${coverletter}</p>
+      `
+    };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -69,7 +68,6 @@ app.post('/jobs/:id/apply', (req, res) => {
           res.status(200).send('Email sent successfully');
         }
       });
-
 });
 
 
